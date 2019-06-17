@@ -7,6 +7,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
+	"runtime"
 	"strings"
 )
 
@@ -36,4 +38,18 @@ func HTTPServeJSON(res http.ResponseWriter, req *http.Request, data interface{})
 	res.Header().Set("Content-Type", "application/json")
 	res.WriteHeader(http.StatusOK)
 	json.NewEncoder(writer).Encode(data)
+}
+
+// HTTPhandleGetStatus ...
+func HTTPhandleGetStatus(res http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodGet {
+		res.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	MemStats := runtime.MemStats{}
+	runtime.ReadMemStats(&MemStats)
+	HTTPServeJSON(res, req, map[string]interface{}{
+		"rev":      os.Getenv("CIRCLE_SHA1"),
+		"MemStats": MemStats,
+	})
 }
