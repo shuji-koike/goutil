@@ -12,6 +12,23 @@ import (
 	"strings"
 )
 
+// HTTPStaticFile ...
+type HTTPStaticFile string
+
+func (s HTTPStaticFile) ServeHTTP(res http.ResponseWriter, req *http.Request) {
+	if len(s) == 0 {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	file, err := os.Open(string(s))
+	if err != nil {
+		res.WriteHeader(http.StatusNotFound)
+		return
+	}
+	defer file.Close()
+	io.Copy(res, file)
+}
+
 // HTTPListenAndServe ...
 func HTTPListenAndServe(mux http.Handler, port int) error {
 	log.Printf("HTTPListenAndServe: port=%d\n", port)
