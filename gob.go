@@ -6,8 +6,8 @@ import (
 	"os"
 )
 
-// GobRead ...
-func GobRead(path string, data interface{}) error {
+// ReadGob ...
+func ReadGob(path string, data interface{}) error {
 	file, err := os.Open(path)
 	if err != nil {
 		return err
@@ -25,8 +25,8 @@ func GobRead(path string, data interface{}) error {
 	return nil
 }
 
-// GobSave ...
-func GobSave(path string, data interface{}) error {
+// WriteGob ...
+func WriteGob(path string, data interface{}) error {
 	file, err := os.Create(path)
 	if err != nil {
 		return err
