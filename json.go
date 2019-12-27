@@ -32,7 +32,10 @@ func WriteJSON(path string, data interface{}) error {
 		return err
 	}
 	defer file.Close()
-	gz := gzip.NewWriter(file)
+	gz, err := gzip.NewWriterLevel(file, CompressionLevel)
+	if err != nil {
+		return err
+	}
 	defer gz.Close()
 	err = json.NewEncoder(gz).Encode(data)
 	if err != nil {
